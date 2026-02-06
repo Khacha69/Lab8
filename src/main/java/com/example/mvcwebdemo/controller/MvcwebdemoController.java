@@ -1,39 +1,88 @@
 package com.example.mvcwebdemo.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.mvcwebdemo.model.RegistrationForm; // Model สำหรับ Login (Lab 7)
+import com.example.mvcwebdemo.model.User; // Model แบบฟอร์มทั่วไป (Lab เก่า)
+import com.example.mvcwebdemo.service.CustomUserDetailsService;
+
 import jakarta.validation.Valid;
-import com.example.mvcwebdemo.model.RegistrationForm; // Import model ที่เราสร้าง
 
 @Controller
 public class MvcwebdemoController {
 
+    private final CustomUserDetailsService userDetailsService;
+
+    // Inject Service เข้ามาผ่าน Constructor
+    public MvcwebdemoController(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    // ---------------------------------------------------------
+    // ส่วนที่ 1: หน้าทั่วไป (Home)
+    // ---------------------------------------------------------
     @GetMapping("/")
     public String home() {
         return "index";
     }
 
-    // 1. ส่งฟอร์มเปล่าๆ ไปให้หน้าเว็บ
-    @GetMapping("/registration")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("registrationForm", new RegistrationForm());
-        return "registration";
+    // ---------------------------------------------------------
+    // ส่วนที่ 2: Spring Security (Login & Register User) -> Lab 7
+    // ---------------------------------------------------------
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
-    // 2. รับค่าจากฟอร์มมากด submit
+    @GetMapping("/greet")
+    public String greet(Authentication authentication, Model model) {
+        model.addAttribute("username", authentication.getName());
+        return "greet";
+    }
+
+    // หน้าฟอร์มสมัครสมาชิก (สำหรับ User Login)
+    @GetMapping("/register")
+    public String showUserRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register"; // ต้องมีไฟล์ register.html
+    }
+
+    // รับค่าสมัครสมาชิก (User Login)
     @PostMapping("/register")
-    public String handleRegistration(@Valid RegistrationForm registrationForm,
-                                     BindingResult bindingResult,
-                                     Model model) {
-        // ถ้ามี Error (เช่น ไม่กรอกข้อมูล, อีเมลผิด) ให้กลับไปหน้าเดิม
+    public String registerUser(@ModelAttribute User user) {
+        userDetailsService.registerUser(user);
+        return "redirect:/login"; 
+    }
+
+    // ---------------------------------------------------------
+    // ส่วนที่ 3: แบบฟอร์มทั่วไป (RegistrationForm) -> Lab เก่า
+    // ---------------------------------------------------------
+
+    // ส่งฟอร์มทั่วไป
+    @GetMapping("/registration")
+    public String showGeneralRegistrationForm(Model model) {
+        model.addAttribute("registrationForm", new RegistrationForm());
+        return "registration"; // ต้องมีไฟล์ registration.html
+    }
+
+    // *** จุดที่แก้ไข: เปลี่ยน URL เป็น /registration เพื่อไม่ให้ชนกับ /register ด้านบน ***
+    @PostMapping("/registration") 
+    public String handleGeneralRegistration(@Valid RegistrationForm registrationForm,
+                                            BindingResult bindingResult,
+                                            Model model) {
+        // ถ้ามี Error
         if (bindingResult.hasErrors()) {
             return "registration";
         }
 
-        // ถ้าผ่านหมด ให้ส่งข้อมูลไปหน้า success
+        // ถ้าผ่าน ส่งไปหน้า success
         model.addAttribute("firstName", registrationForm.getFirstName());
         model.addAttribute("lastName", registrationForm.getLastName());
         model.addAttribute("country", registrationForm.getCountry());
