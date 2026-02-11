@@ -1,6 +1,6 @@
-package com.example.secureauthapp.service;
+package com.example.mvcwebdemo.service;
 
-import com.example.secureauthapp.model.User;
+import com.example.mvcwebdemo.model.User;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

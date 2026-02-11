@@ -1,4 +1,4 @@
-package com.example.secureauthapp.config;
+package com.example.mvcwebdemo.config;
 
 import com.example.secureauthapp.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;

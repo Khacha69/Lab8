@@ -1,4 +1,4 @@
-package com.example.secureauthapp.model;
+package com.example.mvcwebdemo.model;
 
 public class User {
 
