@@ -1,6 +1,6 @@
 package com.example.mvcwebdemo.config;
 
-import com.example.secureauthapp.service.CustomUserDetailsService;
+import com.example.mvcwebdemo.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

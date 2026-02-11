@@ -4,23 +4,42 @@ public class User {
 
     private String username;
     private String password;
-    private String role;   
+    private String role;
 
+    // ✅ Constructor เปล่า (Spring ต้องใช้)
+    public User() {
+    }
+
+    // Constructor แบบมีค่า
     public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
+    // Getter และ Setter
+
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getRole() {
         return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
